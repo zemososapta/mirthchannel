@@ -1,0 +1,4 @@
+INSERT INTO message_audit (uuid, input_message, message_source, created_tstamp, created_by_id)
+VALUES (${ID},convert_to(${message.rawData}, 'UTF8'),${source},current_timestamp,1)
+
+
