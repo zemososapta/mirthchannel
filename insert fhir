@@ -1,0 +1,2 @@
+INSERT INTO message_audit (uuid, input_message, message_source, created_tstamp, created_by_id)
+VALUES (${maps.get('FHIR UNIQUE ID')},convert_to(${message.rawData}, 'UTF8'),${source_name},current_timestamp,1)

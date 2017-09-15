@@ -1,0 +1,70 @@
+var Patient = {};
+Patient.resourceType = "Patient";
+Patient.gender = $('gender');
+Patient.birthDate = $('birthdate');
+var ssn =''; 
+for(var i in msg['identifier'])
+{
+ 	if(msg['identifier'][i]['type']!= null){
+ 		if(msg['identifier'][i]['type']['coding']!= null){    
+     		if(msg['identifier'][i]['type']['coding'][0]['system']!= null){
+     			if(msg['identifier'][i]['type']['coding'][0]['system']
+     			.equals('http://hl7.org/fhir/sid/us-ssn') == true)
+     				var ssn = msg['identifier'][i]['value'];
+     		}
+   	  }
+ 	}
+}
+if(ssn != null)
+	ssn = ssn.toString().substr(0,5)+'xxxx';
+Patient.identifier = [{
+     "use": "usual",
+     "type": {
+       "coding": [
+         {
+           "system": "http://hl7.org/fhir/sid/us-ssn",
+           "code": "SS"
+         }
+       ]
+     },
+     "value": ssn.toString()
+   }];
+
+var lastName = $('name_family').toString().toLowerCase();
+var firstName = $('name_given').toString().toLowerCase();
+
+var humanName = {
+	family : lastName,
+	given : firstName,
+	text : firstName+' '+lastName
+	};
+Patient.name = [humanName];
+var address ={
+	"use": $('address_use'),
+      "type": "",
+      "text":  $('address_line')+', '+$('address_city')+', '+$('address_state')+' ,'+$('address_postalcode'),
+      "line": [
+        $('address_line')
+      ],
+      "city": $('address_city'),      
+      "state": $('address_state'),
+      "postalCode": $('address_postalcode')      
+      }
+Patient.address = [address];
+var messageHeader = {};
+
+messageHeader.resourceType = "MessageHeader";
+messageHeader.id = {
+	"uuid": $('FHIR UNIQUE ID')
+}
+
+messageHeader.source = {
+	
+	name: $('source_name')
+}
+messageHeader.destination = [{
+	name: 'Data-Management'
+}]
+messageHeader.data = [Patient];
+
+msg = JSON.stringify(messageHeader);

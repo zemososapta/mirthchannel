@@ -1,0 +1,6 @@
+UPDATE message_audit
+SET transformed_message = to_jsonb(${message.transformedData}),
+    last_updated_tstamp =  current_timestamp,
+    last_updated_by_id = 2
+WHERE
+  uuid = ${maps.get('FHIR UNIQUE ID')};
